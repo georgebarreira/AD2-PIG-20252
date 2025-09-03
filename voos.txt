@@ -1,0 +1,5 @@
+Voo001,São Paulo,Rio de Janeiro,2024-06-10,08:00,10:00,500
+Voo002,Rio de Janeiro,Brasília,2024-06-10,11:00,13:00,600
+Voo003,Brasília,Salvador,2024-06-10,14:00,16:30,900
+Voo004,Salvador,Recife,2024-06-10,17:00,18:30,950
+Voo005,Recife,Fortaleza,2024-06-10,19:00,20:30,1200
