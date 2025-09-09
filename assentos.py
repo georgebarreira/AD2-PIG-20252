@@ -1,12 +1,13 @@
 # Define as sequências ANSI para as cores e estilos desejados
 class Assento(object):
     
-    def __init__(self, id, idvoo, estado, tipo, uuid):
+    def __init__(self, id, idvoo, estado, tipo, uuid,restricao):
         self.id = id
         self.idvoo = idvoo
         self.estado = estado
         self.tipo = tipo
         self.uuid = uuid
+        self.restricao = restricao
     def getCor(self,identificador):
         VERMELHO = '\033[1;31m'
         AZUL = '\033[1;34m'

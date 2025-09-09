@@ -16,6 +16,11 @@ def cadastroUsuario():
     return user
 
 def main():
+    VERMELHO = '\033[1;31m'
+    AZUL = '\033[1;34m'
+    VERDE = '\033[0;32m'
+    AMARELO = '\033[1;33m'
+    RESET = '\033[0m'
     dados = []
     with open("voos.txt", "r",encoding='utf-8') as file:
         for line in file:
@@ -26,16 +31,21 @@ def main():
     voos=Voos()
     for linha in dados:
         voos.adicionaLinhaVoos(linha)
+    
     dados=[]
+
     with open("assentos.txt", "r",encoding='utf-8') as file:
         for line in file:
             parts = line.strip().split(",")
-            if len(parts) == 5:
+            if len(parts) == 6:
                 dados.append(parts)
     file.close()
+    
     for linha in dados:
         voos.adicionaAssento(linha)
+
     user=[]
+
     with open("usuarios.txt", "r",encoding='utf-8') as file:
         for line in file:
             parts = line.strip().split(",")
@@ -46,9 +56,9 @@ def main():
     for linha in user:
         usuario.adicionaUsuario(linha)
       
-    logado=0
+    logado=False
     while True:
-        if logado==0:
+        if logado==False:
             Bemvindo = "Rio AirWays - Sistema de Reserva de Viagens"
             print("\n"+Bemvindo+"\n")
            
@@ -56,95 +66,39 @@ def main():
             print("1 - Cadastrar Usuário")
             print("2 - Fazer Login")
             print("3 - Sair")
-            print("Escolha uma opção:")
+            print("Escolha uma opção:" ,end=" ")
             choice = input()
-
-            if choice == "1":
-                cadastroUsuario()
-            elif choice == "2":
-                print("Digite seu CPF (somente números): ")
-                cpf = input()
-                print("Digite seu email: ")
-                email = input()
-                login = Login(cpf, email)
-                user=login.login()
-                if len(user)!=0:
-                    logado=1
-                
-                
-                
-
-            elif choice == "3":
-
-                print("Saindo...")
-                break
-            else:
-                print("Opção inválida. Tente novamente.")
-        elif logado==1:
-            print("\nBem-vindo(a),", user[1],"\n")
-            while logado==1:
-                
-                print("Menu Usuário:")
-                
-                print("1 - Reservar/alterar assentos")
-                print("2 - Fazer Logout")
-                choice = input("Escolha uma opção:")
+            try:
                 if choice == "1":
-                    print("Lista de Voos Disponíveis:\n")
-                    voos.imprimirVoos()
-                    
-                    emReserva=True
-                    while emReserva:
-                        idvoo=input("\nDigite o ID do voo que deseja reservar/alterar ou 2 para voltar: \n")
-                        if idvoo == "2":
-                            emReserva=False
-                            idvoo=""
-                        else:
-                            voos.listarAssentos(idvoo)
-                            voos.verificaReserva(idvoo, user[0])
-                            assentoEmReserva=True
-                            
-                            while assentoEmReserva:
-                                
-                                    idAssento=input("Digite o ID do assento: ")
-                                    print("1 - Reservar Assentos")
-                                    print("2 - Cancelar Reserva")
-                                    print("3 - Voltar")
-                                    opção = input("Escolha uma opção:")
-                                    
-                                    if opção == "1":
-                                        if voos.reservaAssento(idvoo, idAssento, user[0]):
-                                            voos.reservaAssento(idvoo, idAssento, user[0])
-                                            voos.listarAssentos(idvoo)
-                                            voos.verificaReserva(idvoo, user[0])
-                                            voos.imprimirVoos()
-                                            assentoEmReserva=False
-                                    elif opção == "2":
-                                        if voos.cancelarReserva(idvoo, idAssento, user[0]):
-                                            voos.cancelarReserva(idvoo, idAssento, user[0])
-                                            voos.listarAssentos(idvoo)
-                                            voos.verificaReserva(idvoo, user[0])
-                                            voos.imprimirVoos()
-                                            assentoEmReserva=False
-                                    elif opção == "3":
-                                        voos.imprimirVoos()
-                                        print("\n")
-                                        assentoEmReserva=False
-                                
-
-                        
-
+                    cadastroUsuario()
                 elif choice == "2":
-                    logado=0
-                    user=[]
-                    login=[]
-                    print("Fazendo logout...")
-                    break
-                      
-                
-                    
-            
+                    print("Digite seu CPF (somente números):", end=" ")
+                    cpf = input()
+                    print("Digite seu email:", end=" ")
+                    email = input()
+                    login = Login(cpf, email)
+                    user=login.login()
+                    if len(user)!=0:
+                        logado=True
+                elif choice == "3":
 
+                    print(f"\n{AMARELO}Saindo...{RESET}\n")
+                    break
+                else:
+                    raise ValueError(f"{VERMELHO}\nOpção inválida. Tente novamente.{RESET}")
+            except ValueError:
+                print(f"{VERMELHO}\nOpção inválida. Tente novamente.{RESET}\n")
+                continue
+                    
+        elif logado==True:
+            print("\nBem-vindo(a),", user[1],"\n")
+            
+            logado=voos.emReserva(user[0])
+               # itens a corrigir:
+               # adicionar aos whiles erros validando entradas
+               # adicionar salvar arquivos ao sair e ao adicionar usuários
+               # fazer logout não funciona - Corrigido
+               
     return None
 main()
 
