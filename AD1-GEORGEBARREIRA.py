@@ -95,10 +95,22 @@ def main():
             
             logado=voos.emReserva(user[0])
                # itens a corrigir:
-               # adicionar aos whiles erros validando entradas
-               # adicionar salvar arquivos ao sair e ao adicionar usuários
+               # adicionar aos whiles erros validando entradas - corrigido
+               # corrigir listar todas reservas - corrigido
+               # adicionar salvar arquivos ao sofrerem modificações - pendente
                # fazer logout não funciona - Corrigido
-               
+               #Requisitos faltantes:
+               # 1- O passageiro não pode reservar mais de um assento por voo;
+               # 2- Um assento na saída de emergência não pode ser reservado por um 
+               # passageiro menor de 18 anos;
+               # 3- Todas as ações realizadas por um usuário no sistema devem ser 
+               # registradas em um log;
+               # 4- Deve existir controle de concorrência para evitar conflitos em 
+               # operações quando múltiplos usuários concorrem pelo mesmo recurso. 
+               # Por exemplo, dois usuários podem tentar reservar o mesmo assento ao 
+               # mesmo tempo.
+               # 5- Múltiplos passageiros podem acessar e utilizar o sistema 
+               # simultaneamente.
     return None
 main()
 

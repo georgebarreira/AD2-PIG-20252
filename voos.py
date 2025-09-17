@@ -180,14 +180,22 @@ class Voos(Assento):
             if i[0] == idvoo:
                 return True
         return False
-
+    def maiorIdade(self,data_nascimento):
+        from datetime import datetime
+        dataAgora = datetime.today().date()
+        data_nascimento = datetime.strptime(data_nascimento, "%d/%m/%Y").date()
+        idade = dataAgora.year - data_nascimento.year - ((dataAgora.month, dataAgora.day) < (data_nascimento.month, data_nascimento.day))
+        if idade >= 18:
+            return True
+        else:
+            return False
 
     def emReserva(self, uuidUser):
         VERMELHO = '\033[1;31m'
         AMARELO = '\033[1;33m'
         RESET = '\033[0m'
         while True:
-            print("Menu Usuário:\n")
+            print("Menu de Reservas:\n")
             print("1 - Reservar Assentos")
             print("2 - Cancelar Reserva")
             print("3 - Alterar Reserva")
