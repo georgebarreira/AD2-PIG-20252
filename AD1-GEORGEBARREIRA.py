@@ -11,8 +11,9 @@ def cadastroUsuario():
     import uuid
     uuid_vlr = uuid.uuid4()
     user=Usuario()
-
-    user.adicionaUsuario( uuid_vlr, nome, cpf, data, email, status="offline")
+    linhaUsuario= [uuid_vlr, nome, cpf, data, email, "offline"]
+    print("linha do Usuario adicionado",linhaUsuario)
+    user.cadastraUsuario(linhaUsuario)
     return user
 
 def main():
@@ -46,15 +47,12 @@ def main():
 
     user=[]
 
-    with open("usuarios.txt", "r",encoding='utf-8') as file:
-        for line in file:
-            parts = line.strip().split(",")
-            if len(parts) == 6:
-                user.append(parts)
-    file.close()
+    
     usuario=Usuario()
-    for linha in user:
-        usuario.adicionaUsuario(linha)
+    usuario.loadUsers() 
+    # tenho que rever como vai funcionar pois o load 
+    # users deveria ser feito apenas dentro da classe para evitar 
+    # #consumo excessivo de tudo
       
     logado=False
     while True:
@@ -70,7 +68,7 @@ def main():
             choice = input()
             try:
                 if choice == "1":
-                    cadastroUsuario()
+                    usuario.cadastraUsuario()
                 elif choice == "2":
                     print("Digite seu CPF (somente números):", end=" ")
                     cpf = input()

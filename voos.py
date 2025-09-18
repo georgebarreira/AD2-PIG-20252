@@ -128,7 +128,7 @@ class Voos(Assento):
                 if i.estado == "reservado":
                     i.estado = "disponivel"
                     i.uuid = ""
-                    print("Reserva cancelada com sucesso!")
+                    print("\nReserva cancelada com sucesso!\n")
         return True
 
     def modificarReserva(self,userUuid):
@@ -180,10 +180,18 @@ class Voos(Assento):
             if i[0] == idvoo:
                 return True
         return False
-    def maiorIdade(self,data_nascimento):
+    
+    def maiorIdade(data_nascimento):
         from datetime import datetime
-        dataAgora = datetime.today().date()
         data_nascimento = datetime.strptime(data_nascimento, "%d/%m/%Y").date()
+        dataAgora = datetime.today().date()
+        print("data agora ", dataAgora)
+        print("data agora ", dataAgora.strftime("%d/%m/%Y"))
+        print("data nascimento ", data_nascimento.strftime("%d/%m/%Y"))
+        idade = dataAgora.year - data_nascimento.year - ((dataAgora.month, dataAgora.day) < (data_nascimento.month, data_nascimento.day))
+        print("Idade: ", idade)
+
+
         idade = dataAgora.year - data_nascimento.year - ((dataAgora.month, dataAgora.day) < (data_nascimento.month, data_nascimento.day))
         if idade >= 18:
             return True

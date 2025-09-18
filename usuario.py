@@ -11,29 +11,7 @@ class Usuario(object):
         self.listaUsuarios=[]
         return None
 
-    def adicionaUsuario(self, nova_linha):
-        usuario = Usuario(nova_linha[0], nova_linha[1], nova_linha[2], nova_linha[3], nova_linha[4], nova_linha[5])
-        self.listaUsuarios.append(usuario)
-        return None
-    def cadastraUsuario(self, uuid_vlr, nome, cpf, data, email,status):
-        try:
-            teste= self.usuarioExiste(cpf , email)
-            teste2 = self.validaDados(nome, cpf, data, email)
-            print("resultado teste: ",teste)
-            print("resultado teste2: ",teste2)
-            if self.validaDados(nome, cpf, data, email) and self.usuarioExiste(cpf, email):
-                
-                
-                self.novoUsuario(uuid_vlr, nome, cpf, data, email,status) 
-            else:
-                print()
-                raise ValueError("Dados inválidos ou usuário já cadastrado.")
-                
-        except Exception as e:
-            print()
-            print(f"Erro ao cadastrar usuário: {e}")
-        
-        return
+    
     
     
     
@@ -80,12 +58,46 @@ class Usuario(object):
                 f.close()
                 return True
     
-    def novoUsuario(self,uuid, nome, cpf, data, email,status): #talvez não precise
+    
+    def cadastraUsuario(self):
+        nome=input("Digite seu nome: ")
+        cpf=input("Digite seu CPF (somente números): ")
+        data = input("Digite sua data de nascimento (DD/MM/AAAA): ")
+        email=input("Digite seu email: ")
+        import uuid
+        uuid_vlr = uuid.uuid4()
+        
+        linhaUsuario= [uuid_vlr, nome, cpf, data, email, "offline"]
+        try:
+            teste= self.usuarioExiste(linhaUsuario[2] , linhaUsuario[4])
+            teste2 = self.validaDados(linhaUsuario[1], linhaUsuario[2], linhaUsuario[3], linhaUsuario[4])
+            print("resultado teste: ",teste)
+            print("resultado teste2: ",teste2)
+            if self.validaDados(linhaUsuario[1], linhaUsuario[2], linhaUsuario[3], linhaUsuario[4]) and self.usuarioExiste(linhaUsuario[2], linhaUsuario[4]):
+                self.novoUsuario(linhaUsuario[0], linhaUsuario[1], linhaUsuario[2], linhaUsuario[3], linhaUsuario[4], linhaUsuario[5])
+            else:
+                print()
+                raise ValueError("Dados inválidos ou usuário já cadastrado.")
+                
+        except Exception as e:
+            print()
+            print(f"Erro ao cadastrar usuário: {e}")
+        user=self.login(linhaUsuario[2],linhaUsuario[4])
+        
+        return user
+    
+    def login(self,cpf,email):
+        for user in self.listaUsuarios:
+            if cpf == self.listaUsuarios[user][2] and email == self.listaUsuarios[user][4]:
+                return self.listaUsuarios[user]
+        return None
+    
+    def novoUsuario(self,uuid, nome, cpf, data, email,status): 
         usuario = Usuario(uuid, uuid, cpf, data, email, status)
         self.listaUsuarios.append(usuario)
         try:
             with open('usuarios.txt', 'a', encoding='utf-8') as f:
-                f.write(f"{uuid},{nome},{cpf},{data},{email},{status}\n")
+                f.write(f"\n{uuid},{nome},{cpf},{data},{email},{status}")
                 f.close()
             print("\n")
             print("Usuário cadastrado com sucesso!")
@@ -97,6 +109,7 @@ class Usuario(object):
             print("\n")
             input("Pressione enter para retornar ao menu")
             print("\n")
+            self.loadUsers()
 
 
             return True
@@ -105,9 +118,22 @@ class Usuario(object):
             print(f"Erro ao salvar usuário no arquivo: {e}")
             print()
         return False
-   
-            
-        
+    
+    def loadUsers(self):
+        with open ('usuarios.txt', 'r',encoding='utf-8') as file:
+            for linha in file:
+                aux=linha.strip().split(',')
+                self.listaUsuarios.append(aux)
+            print(self.listaUsuarios)
+            file.close()
+        return None
+    def saveUsers(self):
+        with open('usuarios.txt', 'w', encoding='utf-8') as file:
+            for i in range(len(self.listaUsuarios)):
+                file.write(f'{self.listaUsuarios[i][0]},{self.listaUsuarios[i][1]},{self.listaUsuarios[i][2]},{self.listaUsuarios[i][3]},{self.listaUsuarios[i][4]},{self.listaUsuarios[i][5]}\n')
+            file.close()
+        return None
+    
         
     
                     
