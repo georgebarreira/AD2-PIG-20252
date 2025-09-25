@@ -12,7 +12,6 @@ def cadastroUsuario():
     uuid_vlr = uuid.uuid4()
     user=Usuario()
     linhaUsuario= [uuid_vlr, nome, cpf, data, email, "offline"]
-    print("linha do Usuario adicionado",linhaUsuario)
     user.cadastraUsuario(linhaUsuario)
     return user
 
@@ -88,8 +87,7 @@ def main():
                     
         elif logado==True:
             
-            for i in range(len(user)):
-                print(f"Esse é o usuário {i}:",user[i])
+            
             
             print("\nBem-vindo(a),", user[0][1],"\n")
             
@@ -100,7 +98,7 @@ def main():
             # adicionar salvar arquivos ao sofrerem modificações - pendente
             # fazer logout não funciona - Corrigido
             #Requisitos faltantes:
-            # 1- O passageiro não pode reservar mais de um assento por voo;
+            # 1- O passageiro não pode reservar mais de um assento por voo - Corrigido
             # 2- Um assento na saída de emergência não pode ser reservado por um 
             # passageiro menor de 18 anos;
             # 3- Todas as ações realizadas por um usuário no sistema devem ser 

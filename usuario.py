@@ -132,7 +132,7 @@ class Usuario(object):
             for linha in file:
                 aux=linha.strip().split(',')
                 self.listaUsuarios.append(aux)
-            print(self.listaUsuarios)
+            
             file.close()
         return None
     def saveUsers(self):

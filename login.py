@@ -18,7 +18,7 @@ class Login(object):
             if cpf_user == self.cpf and email_user == self.email:
                 
                 aux.append([user[0],user[1],user[2],user[3],user[4],user[5]])
-            print(aux)
+            
         if aux:
             return aux
         raise ValueError("\nUsuário não encontrado. Verifique o CPF e o email.\n")

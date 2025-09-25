@@ -1,5 +1,5 @@
 from assentos import Assento
-import assentos
+
 class Voos(Assento):
     def __init__(self, id=None, origem=None, destino=None, data=None, horai=None, horaf=None, valor=None):
 
@@ -80,22 +80,53 @@ class Voos(Assento):
         print("\n")
         
         return None
+    def possuiResertaEmVoo(self, idvoo,uuid):
+        VERMELHO = '\033[1;31m'
+        AZUL = '\033[1;34m'
+        VERDE = '\033[0;32m'
+        AMARELO = '\033[1;33m'
+        RESET = '\033[0m'
+        data=[]
+        
+        for i in self.assentos:
+            if i.idvoo == idvoo and i.uuid == uuid:
+                data.append(i)
+        if len(data)>0:
+            print(f"{VERMELHO}\nSomente uma reserva pode ser feita por voo.{RESET}\n")
+            return True
+        else: 
+            
+            return False
+
+
+
     def reservaAssento(self, idvoo, idAssento, uuid):
-       for i in self.assentos:
-            try:
-                if i.idvoo == idvoo and i.id == idAssento and i.estado == "disponivel":
-                    if i.estado != "disponivel":
-                        raise ValueError("\nAssento não está disponível.\n")
-            except ValueError as e:
-                print(e)
-                return False
-            if i.idvoo == idvoo and i.id == idAssento:
-                if i.estado == "disponivel":
-                    i.estado = "reservado"
-                    i.uuid = uuid
-                    
-                    print("Assento reservado com sucesso!")
-                    return True
+       
+        
+        if self.possuiResertaEmVoo(idvoo,  uuid):
+            
+            
+            return False
+            
+        else:
+            print("entrou no else não tendo reserva")
+            for i in self.assentos:
+                    try:
+                        if i.idvoo == idvoo and i.id == idAssento and i.estado == "disponivel":
+                            if i.estado != "disponivel":
+                                raise ValueError("\nAssento não está disponível.\n")
+                    except ValueError as e:
+                        print(e)
+                        return False
+                    if i.idvoo == idvoo and i.id == idAssento:
+                        if i.estado == "disponivel":
+                            i.estado = "reservado"
+                            i.uuid = uuid
+                            
+                            print("Assento reservado com sucesso!")
+                            return True
+            
+      
                 
     def verificaReserva(self, idvoo, uuid):
         AZUL = '\033[1;34m'
