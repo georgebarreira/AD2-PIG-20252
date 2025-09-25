@@ -50,9 +50,7 @@ def main():
     
     usuario=Usuario()
     usuario.loadUsers() 
-    # tenho que rever como vai funcionar pois o load 
-    # users deveria ser feito apenas dentro da classe para evitar 
-    # #consumo excessivo de tudo
+    
       
     logado=False
     while True:
@@ -89,26 +87,34 @@ def main():
                 continue
                     
         elif logado==True:
-            print("\nBem-vindo(a),", user[1],"\n")
+            
+            for i in range(len(user)):
+                print(f"Esse é o usuário {i}:",user[i])
+            
+            print("\nBem-vindo(a),", user[0][1],"\n")
             
             logado=voos.emReserva(user[0])
-               # itens a corrigir:
-               # adicionar aos whiles erros validando entradas - corrigido
-               # corrigir listar todas reservas - corrigido
-               # adicionar salvar arquivos ao sofrerem modificações - pendente
-               # fazer logout não funciona - Corrigido
-               #Requisitos faltantes:
-               # 1- O passageiro não pode reservar mais de um assento por voo;
-               # 2- Um assento na saída de emergência não pode ser reservado por um 
-               # passageiro menor de 18 anos;
-               # 3- Todas as ações realizadas por um usuário no sistema devem ser 
-               # registradas em um log;
-               # 4- Deve existir controle de concorrência para evitar conflitos em 
-               # operações quando múltiplos usuários concorrem pelo mesmo recurso. 
-               # Por exemplo, dois usuários podem tentar reservar o mesmo assento ao 
-               # mesmo tempo.
-               # 5- Múltiplos passageiros podem acessar e utilizar o sistema 
-               # simultaneamente.
+            # itens a corrigir:
+            # adicionar aos whiles erros validando entradas - corrigido
+            # corrigir listar todas reservas - corrigido
+            # adicionar salvar arquivos ao sofrerem modificações - pendente
+            # fazer logout não funciona - Corrigido
+            #Requisitos faltantes:
+            # 1- O passageiro não pode reservar mais de um assento por voo;
+            # 2- Um assento na saída de emergência não pode ser reservado por um 
+            # passageiro menor de 18 anos;
+            # 3- Todas as ações realizadas por um usuário no sistema devem ser 
+            # registradas em um log;
+            # 4- Deve existir controle de concorrência para evitar conflitos em 
+            # operações quando múltiplos usuários concorrem pelo mesmo recurso. 
+            # Por exemplo, dois usuários podem tentar reservar o mesmo assento ao 
+            # mesmo tempo.
+            # 5- Múltiplos passageiros podem acessar e utilizar o sistema 
+            # simultaneamente.
+
+            # tenho que rever como vai funcionar pois o Usuario.loadUsers()
+            # users deveria ser feito apenas dentro da classe para evitar 
+            # #consumo excessivo de tudo
     return None
 main()
 

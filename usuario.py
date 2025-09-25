@@ -87,10 +87,18 @@ class Usuario(object):
         return user
     
     def login(self,cpf,email):
-        for user in self.listaUsuarios:
-            if cpf == self.listaUsuarios[user][2] and email == self.listaUsuarios[user][4]:
-                return self.listaUsuarios[user]
-        return None
+        aux= []
+        try:
+
+            if self.usuarioExiste(cpf,email):
+                for user in self.listaUsuarios:
+                    if cpf == user[2] and email == user[4]:
+                        aux.append(user)
+                        return aux
+            else: 
+                raise ValueError('Usuário não encontrado favor tentar novamente')
+        finally:   
+            return aux
     
     def novoUsuario(self,uuid, nome, cpf, data, email,status): 
         usuario = Usuario(uuid, uuid, cpf, data, email, status)
