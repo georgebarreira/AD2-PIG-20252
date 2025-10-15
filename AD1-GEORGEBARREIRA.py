@@ -92,12 +92,16 @@ def main():
             print("\nBem-vindo(a),", user[0][1],"\n")
             
             logado=voos.emReserva(user[0])
+
             # itens a corrigir:
+
             # adicionar aos whiles erros validando entradas - corrigido
             # corrigir listar todas reservas - corrigido
             # adicionar salvar arquivos ao sofrerem modificações - pendente
             # fazer logout não funciona - Corrigido
+
             #Requisitos faltantes:
+            
             # 1- O passageiro não pode reservar mais de um assento por voo - Corrigido
             # 2- Um assento na saída de emergência não pode ser reservado por um 
             # passageiro menor de 18 anos;

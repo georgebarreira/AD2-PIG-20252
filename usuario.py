@@ -1,19 +1,27 @@
-
+import tkinter as tk
+from tkinter import messagebox
 
 class Usuario(object):
-    def __init__(self,uuid_vlr=None, nome=None, cpf=None, data=None, email=None,status=None):
+    def __init__(self,uuid_vlr=None, nome=None, cpf=None, data=None, email=None,status=None,senha = None):
         self.uuid_vlr = uuid_vlr
         self.nome = nome
         self.cpf = cpf
         self.data = data
         self.email = email
         self.status = status
+        self.senha = senha
         self.listaUsuarios=[]
         return None
 
     
     
-    
+    def buscaUsuario(self, uuid):
+        aux=[]
+        for i in self.listaUsuarios:
+            if i.uuid_vlr == uuid:
+                aux.append(i)
+        return aux
+
     
     def validaDados(self, nome, cpf, data, email):
             if not nome or not cpf or not data or not email:
@@ -59,72 +67,82 @@ class Usuario(object):
                 return True
     
     
-    def cadastraUsuario(self):
-        nome=input("Digite seu nome: ")
-        cpf=input("Digite seu CPF (somente números): ")
-        data = input("Digite sua data de nascimento (DD/MM/AAAA): ")
-        email=input("Digite seu email: ")
+    def cadastraUsuario(self, nome, cpf, data, email, senha, cadastro_callback=None):
         import uuid
+        user = []
         uuid_vlr = uuid.uuid4()
-        
-        linhaUsuario= [uuid_vlr, nome, cpf, data, email, "offline"]
+        linhaUsuario = [uuid_vlr, nome, cpf, data, email, "offline", senha]
         try:
-            teste= self.usuarioExiste(linhaUsuario[2] , linhaUsuario[4])
-            teste2 = self.validaDados(linhaUsuario[1], linhaUsuario[2], linhaUsuario[3], linhaUsuario[4])
-            print("resultado teste: ",teste)
-            print("resultado teste2: ",teste2)
             if self.validaDados(linhaUsuario[1], linhaUsuario[2], linhaUsuario[3], linhaUsuario[4]) and self.usuarioExiste(linhaUsuario[2], linhaUsuario[4]):
-                self.novoUsuario(linhaUsuario[0], linhaUsuario[1], linhaUsuario[2], linhaUsuario[3], linhaUsuario[4], linhaUsuario[5])
+                self.novoUsuario(linhaUsuario[0], linhaUsuario[1], linhaUsuario[2], linhaUsuario[3], linhaUsuario[4], linhaUsuario[5], linhaUsuario[6])
             else:
-                print()
-                raise ValueError("Dados inválidos ou usuário já cadastrado.")
-                
+                tk.messagebox.showerror("Erro", "Dados inválidos ou usuário já cadastrado.")
+                return False, user
         except Exception as e:
-            print()
-            print(f"Erro ao cadastrar usuário: {e}")
-        user=self.login(linhaUsuario[2],linhaUsuario[4])
-        
-        return user
-    
-    def login(self,cpf,email):
-        aux= []
-        try:
+            tk.messagebox.showerror("Erro", f"Erro ao cadastrar usuário: {e}")
+            
+            return False , user
 
-            if self.usuarioExiste(cpf,email):
-                for user in self.listaUsuarios:
-                    if cpf == user[2] and email == user[4]:
-                        aux.append(user)
+        user = self.login(linhaUsuario[2], linhaUsuario[4])
+        return True ,user
+    def validaLogin(self,cpf,senha):
+        user_obj = None
+        try:
+            with open('usuarios.txt', 'r', encoding='utf-8') as f:
+                for line in f:
+                    usuario = line.strip().split(',')
+                    if cpf == usuario[2] and senha == usuario[6]:
+                    # Cria e retorna o objeto Usuario ao invés do array
+                        user_obj = Usuario(
+                            uuid_vlr=usuario[0],
+                            nome=usuario[1],
+                            cpf=usuario[2],
+                            data=usuario[3],
+                            email=usuario[4],
+                            status=usuario[5],
+                            senha=usuario[6]
+                        )
+                        user_obj.status = "online"
+                
+            f.close()
+            return user_obj
+        except Exception as e:
+            tk.messagebox.showerror("Erro", f"Erro ao validar login: {e}")
+            return user_obj
+        
+                    
+            
+    def login(self,cpf,senha):
+        user_obj = None
+        aux=[]
+        try:
+            aux=self.validaLogin(cpf,senha)
+            if len(aux) > 0:
+                
                         return aux
             else: 
-                raise ValueError('Usuário não encontrado favor tentar novamente')
+                tk.messagebox.showerror("Erro", "CPF ou senha inválidos.")
+                return aux
         finally:   
             return aux
     
-    def novoUsuario(self,uuid, nome, cpf, data, email,status): 
+    def novoUsuario(self,uuid, nome, cpf, data, email,status,senha): 
         usuario = Usuario(uuid, uuid, cpf, data, email, status)
         self.listaUsuarios.append(usuario)
         try:
             with open('usuarios.txt', 'a', encoding='utf-8') as f:
-                f.write(f"\n{uuid},{nome},{cpf},{data},{email},{status}")
+                f.write(f"\n{uuid},{nome},{cpf},{data},{email},{status},{senha}")
                 f.close()
-            print("\n")
-            print("Usuário cadastrado com sucesso!")
-            print(f"Nome cadastrado: {nome}")
-            print(f"CPF cadastrado: {cpf}")
-            print(f"Data de nascimento: {data}")
-            print(f"Email cadastrado: {email}")
-            print(f"Status: {status}")
-            print("\n")
-            input("Pressione enter para retornar ao menu")
-            print("\n")
+            tk.messagebox.showinfo("Cadastro",f"Usuário cadastrado!\nNome: {nome}\nCPF: {cpf}\nData: {data}\nEmail: {email}\n")
+                                  
+
+           
             self.loadUsers()
 
 
             return True
         except Exception as e:
-            print()
-            print(f"Erro ao salvar usuário no arquivo: {e}")
-            print()
+            tk.messagebox.showerror("Erro", f"Erro ao salvar usuário no arquivo: {e}")
         return False
     
     def loadUsers(self):
@@ -132,6 +150,7 @@ class Usuario(object):
             for linha in file:
                 aux=linha.strip().split(',')
                 self.listaUsuarios.append(aux)
+                Usuario(aux[0],aux[1],aux[2],aux[3],aux[4],aux[5],aux[6])
             
             file.close()
         return None

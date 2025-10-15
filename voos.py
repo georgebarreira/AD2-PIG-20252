@@ -1,4 +1,5 @@
 from assentos import Assento
+from usuario import Usuario
 
 class Voos(Assento):
     def __init__(self, id=None, origem=None, destino=None, data=None, horai=None, horaf=None, valor=None):
@@ -12,9 +13,35 @@ class Voos(Assento):
         self.valor = valor
         self.assentos = []
         self.listaVoos = []
+        self.carregaVoosEAssentos()
         
         
         return None
+    def carregaVoosEAssentos(self):
+        dados = []
+        with open("voos.txt", "r",encoding='utf-8') as file:
+            for line in file:
+                parts = line.strip().split(",")
+                if len(parts) == 7:
+                    dados.append(parts)
+        file.close()
+        
+        for linha in dados:
+            self.adicionaLinhaVoos(linha)
+        
+        dados=[]
+
+        with open("assentos.txt", "r",encoding='utf-8') as file:
+            for line in file:
+                parts = line.strip().split(",")
+                if len(parts) == 6:
+                    dados.append(parts)
+        file.close()
+        
+        for linha in dados:
+            self.adicionaAssento(linha)
+        return None
+    
     def adicionaLinhaVoos(self, nova_linha):
         self.id = nova_linha[0]
         self.origem = nova_linha[1]
@@ -31,12 +58,15 @@ class Voos(Assento):
         self.assentos.append(assento)
         return None
     
+
+
     def imprimirVoos(self):
         print("Lista de Voos Disponíveis:\n")
         for i in range(len(self.listaVoos)):
             print(f"ID: {self.listaVoos[i][0]}, Trajeto: {self.listaVoos[i][1]} x {self.listaVoos[i][2]}, Data: {self.listaVoos[i][3]}, Embarque: {self.listaVoos[i][4]}, Valor:R$ {self.listaVoos[i][6]},00")
         
         return None
+
 
     def salvarAssentos(self,idvoo):
         with open("assentos.txt", "w") as file:
@@ -51,7 +81,20 @@ class Voos(Assento):
                 file.write(f"{voo.id},{voo.origem},{voo.destino},{voo.data},{voo.horai},{voo.horaf}\n")
             file.close()
         return None          
-    
+    def retornaAssentos(self,idvoo):
+        
+        result = []
+        for assento in self.assentos:
+            if assento.idvoo == idvoo:
+                result.append(assento)
+        return result
+
+    def retornarReserva(self,idvoo, uuid):
+        aux=[]
+        for i in self.assentos:
+            if i.idvoo == idvoo and i.uuid == uuid and i.estado == "reservado":
+                aux.append(i)
+        return aux
     def listarAssentos(self,idvoo,uuidUser):
         VERMELHO = '\033[1;31m'
         AZUL = '\033[1;34m'
@@ -100,7 +143,8 @@ class Voos(Assento):
 
 
 
-    def reservaAssento(self, idvoo, idAssento, uuid):
+    def reservaAssento(self, idvoo, idAssento, uuid, dadosUsuario):
+       
        
         
         if self.possuiResertaEmVoo(idvoo,  uuid):
@@ -109,12 +153,12 @@ class Voos(Assento):
             return False
             
         else:
-            print("entrou no else não tendo reserva")
+            
             for i in self.assentos:
                     try:
-                        if i.idvoo == idvoo and i.id == idAssento and i.estado == "disponivel":
-                            if i.estado != "disponivel":
-                                raise ValueError("\nAssento não está disponível.\n")
+                        if i.idvoo == idvoo and i.id == idAssento and i.estado != "disponivel":
+                            
+                            raise ValueError("\nAssento não está disponível.\n")
                     except ValueError as e:
                         print(e)
                         return False
@@ -212,7 +256,7 @@ class Voos(Assento):
                 return True
         return False
     
-    def maiorIdade(data_nascimento):
+    def maiorIdade(self,data_nascimento):
         from datetime import datetime
         data_nascimento = datetime.strptime(data_nascimento, "%d/%m/%Y").date()
         dataAgora = datetime.today().date()
