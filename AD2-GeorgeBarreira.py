@@ -2,6 +2,14 @@ import tkinter as tk
 from usuario import Usuario
 from voos import Voos
 
+'''
+Este código cria uma interface gráfica simples usando Tkinter para um sistema de reserva de viagens.
+Ele inclui telas para cadastro de usuário, login e seleção de assentos em voos.
+Ele também está disponível em: https://github.com/georgebarreira/AD2-PIG-20252
+
+'''
+
+
 app = tk.Tk()
 app.title("Rio AirWays - Sistema de Reserva de Viagens")
 app.geometry("800x600")
